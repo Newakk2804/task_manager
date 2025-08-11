@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "users.apps.UsersConfig",
     "tasks.apps.TasksConfig",
     "crispy_forms",
+    "crispy_bootstrap5",
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,6 @@ LOGIN_REDIRECT_URL = "task_list"
 LOGOUT_REDIRECT_URL = "login"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
