@@ -1,39 +1,51 @@
-{% extends "base.html" %} {% load static %} {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h1>Мои задачи</h1>
-  <a class="btn btn-primary" href="{% url 'task_create' %}">Создать задачу</a>
+{% extends "base.html" %} {% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3">Мои задачи</h1>
+  <a class="btn btn-primary" href="{% url 'task_create' %}">➕ Создать задачу</a>
 </div>
 
 {% if tasks %}
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Заголовок</th>
-      <th>Приоритет</th>
-      <th>Срок</th>
-      <th>Статус</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for task in tasks %}
-    <tr class="{% if task.completed %}table-success{% endif %}">
-      <td><a href="{% url 'task_detail' task.pk %}">{{ task.title }}</a></td>
-      <td>{{ task.get_priority_display }}</td>
-      <td>{{ task.due_date|default:"—" }}</td>
-      <td>{% if task.completed %}Выполнена{% else %}Активна{% endif %}</td>
-      <td>
-        <a href="{% url 'task_update' task.pk %}">Ред.</a> |
-        <a href="{% url 'task_delete' task.pk %}">Удалить</a>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="table-responsive">
+  <table class="table table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>Заголовок</th>
+        <th>Приоритет</th>
+        <th>Срок</th>
+        <th>Статус</th>
+        <th class="text-end">Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in tasks %}
+      <tr class="{% if task.completed %}table-success{% endif %}">
+        <td>
+          <a href="{% url 'task_detail' task.pk %}" class="text-decoration-none"
+            >{{ task.title }}</a
+          >
+        </td>
+        <td>{{ task.get_priority_display }}</td>
+        <td>{{ task.due_date|default:"—" }}</td>
+        <td>
+          {% if task.completed %}
+          <span class="badge bg-success">Выполнена</span>
+          {% else %}
+          <span class="badge bg-warning text-dark">Активна</span>
+          {% endif %}
+        </td>
+        <td class="text-end">
+          <a href="{% url 'task_update' task.pk %}" class="btn btn-sm btn-outline-primary">✏️</a>
+          <a href="{% url 'task_delete' task.pk %}" class="btn btn-sm btn-outline-danger">🗑</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 {% if is_paginated %}
 <nav>
-  <ul class="pagination">
+  <ul class="pagination justify-content-center">
     {% if page_obj.has_previous %}
     <li class="page-item">
       <a class="page-link" href="?page={{ page_obj.previous_page_number }}">«</a>
@@ -52,5 +64,7 @@
   </ul>
 </nav>
 {% endif %} {% else %}
-<p>У вас пока нет задач. <a href="{% url 'task_create' %}">Создать первую</a>.</p>
+<div class="alert alert-info">
+  У вас пока нет задач. <a href="{% url 'task_create' %}">Создать первую</a>.
+</div>
 {% endif %} {% endblock %}
