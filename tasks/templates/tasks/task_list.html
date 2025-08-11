@@ -1,0 +1,56 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1>Мои задачи</h1>
+  <a class="btn btn-primary" href="{% url 'task_create' %}">Создать задачу</a>
+</div>
+
+{% if tasks %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Заголовок</th>
+      <th>Приоритет</th>
+      <th>Срок</th>
+      <th>Статус</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for task in tasks %}
+    <tr class="{% if task.completed %}table-success{% endif %}">
+      <td><a href="{% url 'task_detail' task.pk %}">{{ task.title }}</a></td>
+      <td>{{ task.get_priority_display }}</td>
+      <td>{{ task.due_date|default:"—" }}</td>
+      <td>{% if task.completed %}Выполнена{% else %}Активна{% endif %}</td>
+      <td>
+        <a href="{% url 'task_update' task.pk %}">Ред.</a> |
+        <a href="{% url 'task_delete' task.pk %}">Удалить</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if is_paginated %}
+<nav>
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page_obj.previous_page_number }}">«</a>
+    </li>
+    {% endif %}
+    <li class="page-item disabled">
+      <span class="page-link"
+        >Стр. {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span
+      >
+    </li>
+    {% if page_obj.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ page_obj.next_page_number }}">»</a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %} {% else %}
+<p>У вас пока нет задач. <a href="{% url 'task_create' %}">Создать первую</a>.</p>
+{% endif %} {% endblock %}
